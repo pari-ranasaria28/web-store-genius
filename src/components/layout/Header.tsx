@@ -2,10 +2,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { Search, ShoppingCart, Menu, X, User } from "lucide-react";
 
 const Header = () => {
   const { itemCount } = useCart();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
@@ -46,9 +48,33 @@ const Header = () => {
                 </span>
               )}
             </Link>
-            <Link to="/admin" className="text-slate-600 hover:text-emerald-600 transition">
-              <User size={20} />
-            </Link>
+            {user ? (
+              <div className="flex items-center space-x-2">
+                {user.isAdmin && (
+                  <Link to="/admin" className="text-slate-600 hover:text-emerald-600 transition">
+                    Admin
+                  </Link>
+                )}
+                <button 
+                  onClick={logout}
+                  className="text-slate-600 hover:text-emerald-600 transition"
+                >
+                  Logout
+                </button>
+                <Link to="/account" className="text-slate-600 hover:text-emerald-600 transition">
+                  <User size={20} />
+                </Link>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link to="/login" className="text-slate-600 hover:text-emerald-600 transition">
+                  Login
+                </Link>
+                <Link to="/sign-up" className="text-slate-600 hover:text-emerald-600 transition">
+                  Sign Up
+                </Link>
+              </div>
+            )}
             
             {/* Mobile menu button */}
             <button 
@@ -92,6 +118,44 @@ const Header = () => {
               >
                 About
               </Link>
+              {!user && (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="text-slate-700 hover:text-emerald-600 transition"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    to="/sign-up" 
+                    className="text-slate-700 hover:text-emerald-600 transition"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+              {user?.isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className="text-slate-700 hover:text-emerald-600 transition"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              {user && (
+                <button 
+                  onClick={() => {
+                    logout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-left text-slate-700 hover:text-emerald-600 transition"
+                >
+                  Logout
+                </button>
+              )}
             </div>
           </nav>
         )}

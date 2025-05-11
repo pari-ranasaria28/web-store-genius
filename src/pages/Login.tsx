@@ -1,18 +1,18 @@
 
 import { Navigate } from "react-router-dom";
 import { SignIn } from "@clerk/clerk-react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { useState } from "react";
 
-const AdminLogin = () => {
+const UserLogin = () => {
   const { user } = useAuth();
-  const [loginType, setLoginType] = useState<"admin" | "user">("admin");
+  const [loginType, setLoginType] = useState<"admin" | "user">("user");
   
-  // If already logged in as admin, redirect to admin dashboard
-  if (user && user.isAdmin) {
-    return <Navigate to="/admin" replace />;
+  // If already logged in, redirect to home page
+  if (user) {
+    return <Navigate to="/" replace />;
   }
   
   return (
@@ -69,4 +69,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default UserLogin;
