@@ -34,19 +34,17 @@ const AdminLogin = () => {
             <div className="flex space-x-2 mb-6">
               <Button 
                 variant={loginType === "admin" ? "default" : "outline"}
-                className={loginType === "admin" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                className={`flex-1 ${loginType === "admin" ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
                 onClick={() => setLoginType("admin")}
                 size="lg"
-                className="flex-1"
               >
                 Admin Login
               </Button>
               <Button 
                 variant={loginType === "user" ? "default" : "outline"}
-                className={loginType === "user" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                className={`flex-1 ${loginType === "user" ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
                 onClick={() => setLoginType("user")}
                 size="lg"
-                className="flex-1"
               >
                 User Login
               </Button>
