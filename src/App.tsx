@@ -16,6 +16,8 @@ import Checkout from "./pages/Checkout";
 import ThankYou from "./pages/ThankYou";
 import UserLogin from "./pages/Login";
 import UserSignUp from "./pages/SignUp";
+import Categories from "./pages/Categories";
+import About from "./pages/About";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
@@ -48,6 +50,8 @@ const App = () => (
               <Route path="/thank-you" element={<ThankYou />} />
               <Route path="/login" element={<UserLogin />} />
               <Route path="/sign-up" element={<UserSignUp />} />
+              <Route path="/categories" element={<Categories />} />
+              <Route path="/about" element={<About />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
