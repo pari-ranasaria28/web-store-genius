@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Product } from "../../data/products";
 import { categories } from "../../data/products";
@@ -15,7 +14,7 @@ const ProductForm = ({ initialData, onSubmit }: ProductFormProps) => {
   const [image, setImage] = useState(initialData?.image || "");
   const [category, setCategory] = useState(initialData?.category || categories[0]);
   const [featured, setFeatured] = useState(initialData?.featured || false);
-  const [inStock, setInStock] = useState(initialData?.inStock || true);
+  const [inStock, setInStock] = useState<boolean>(initialData?.inStock || true);
   const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const [tagInput, setTagInput] = useState("");
   
