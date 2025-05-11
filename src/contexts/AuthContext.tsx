@@ -20,11 +20,10 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { isLoaded, userId } = useClerkAuth();
-  const { user: clerkUser } = useUser();
+  const { isLoaded, userId, signOut } = useClerkAuth();
+  const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
   
   // For demo purposes, we'll consider any authenticated user as admin
-  // In a real app, you'd check for specific roles or permissions
   const user: User | null = userId && clerkUser ? {
     id: userId,
     email: clerkUser.primaryEmailAddress?.emailAddress || "",
@@ -39,8 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const logout = () => {
-    // This is kept for compatibility but won't be used directly
-    // Clerk handles logout through its SignOutButton component
+    if (signOut) signOut();
   };
   
   return (
@@ -48,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user,
       login,
       logout,
-      isLoading: !isLoaded,
+      isLoading: !isLoaded || !isUserLoaded,
       error: null
     }}>
       {children}
