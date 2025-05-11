@@ -1,5 +1,6 @@
 
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useAuth as useClerkAuth, useUser } from "@clerk/clerk-react";
 
 export type User = {
   id: string;
@@ -18,59 +19,28 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock admin user data - in a real app, this would come from your backend
-const mockAdminUser: User = {
-  id: "admin-123",
-  email: "admin@example.com",
-  name: "Admin User",
-  isAdmin: true
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isLoaded, userId } = useClerkAuth();
+  const { user: clerkUser } = useUser();
   
-  // Check for existing session on mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.error("Failed to parse user from localStorage", e);
-      }
-    }
-    setIsLoading(false);
-  }, []);
+  // For demo purposes, we'll consider any authenticated user as admin
+  // In a real app, you'd check for specific roles or permissions
+  const user: User | null = userId && clerkUser ? {
+    id: userId,
+    email: clerkUser.primaryEmailAddress?.emailAddress || "",
+    name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
+    isAdmin: true  // In a real app, you would determine this based on user roles
+  } : null;
   
-  // Mock login function - in a real app, this would call your API
   const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Mock authentication logic
-      if (email === "admin@example.com" && password === "password") {
-        setUser(mockAdminUser);
-        localStorage.setItem("user", JSON.stringify(mockAdminUser));
-      } else {
-        throw new Error("Invalid email or password");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An unknown error occurred");
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+    // This function is kept for compatibility but won't be used
+    // Clerk handles login through its own components
+    throw new Error("Use Clerk components for authentication");
   };
   
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+    // This is kept for compatibility but won't be used directly
+    // Clerk handles logout through its SignOutButton component
   };
   
   return (
@@ -78,8 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user,
       login,
       logout,
-      isLoading,
-      error
+      isLoading: !isLoaded,
+      error: null
     }}>
       {children}
     </AuthContext.Provider>

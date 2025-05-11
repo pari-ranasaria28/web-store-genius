@@ -1,12 +1,10 @@
 
-import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { SignIn } from "@clerk/clerk-react";
+import { Navigate } from "react-router-dom";
+import { SignUp } from "@clerk/clerk-react";
 import { useAuth } from "../../contexts/AuthContext";
 
-const AdminLogin = () => {
+const AdminSignUp = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   
   // If already logged in as admin, redirect to admin dashboard
   if (user && user.isAdmin) {
@@ -18,15 +16,15 @@ const AdminLogin = () => {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-800">Admin Login</h1>
+            <h1 className="text-2xl font-bold text-slate-800">Admin Sign Up</h1>
             <p className="text-slate-500 mt-2">
-              Sign in to your admin account to manage your store.
+              Create an admin account to manage your store.
             </p>
           </div>
           
-          <SignIn 
-            signUpUrl="/admin/sign-up"
-            afterSignInUrl="/admin"
+          <SignUp 
+            signInUrl="/admin/login"
+            afterSignUpUrl="/admin"
             fallbackRedirectUrl="/admin"
             appearance={{
               elements: {
@@ -40,4 +38,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default AdminSignUp;
