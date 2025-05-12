@@ -33,6 +33,9 @@ const Header = () => {
             <Link to="/about" className="text-slate-700 hover:text-emerald-600 transition">
               About
             </Link>
+            <Link to="/contact" className="text-slate-700 hover:text-emerald-600 transition">
+              Contact
+            </Link>
           </nav>
           
           {/* Actions */}
@@ -118,6 +121,13 @@ const Header = () => {
               >
                 About
               </Link>
+              <Link 
+                to="/contact" 
+                className="text-slate-700 hover:text-emerald-600 transition"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
               {!user && (
                 <>
                   <Link 
@@ -146,15 +156,24 @@ const Header = () => {
                 </Link>
               )}
               {user && (
-                <button 
-                  onClick={() => {
-                    logout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-left text-slate-700 hover:text-emerald-600 transition"
-                >
-                  Logout
-                </button>
+                <>
+                  <Link 
+                    to="/account" 
+                    className="text-slate-700 hover:text-emerald-600 transition"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    My Account
+                  </Link>
+                  <button 
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-left text-slate-700 hover:text-emerald-600 transition"
+                  >
+                    Logout
+                  </button>
+                </>
               )}
             </div>
           </nav>

@@ -5,7 +5,6 @@ import {
   Package,
   List,
   Users,
-  Settings,
   ShoppingCart
 } from "lucide-react";
 
@@ -45,11 +44,6 @@ const AdminSidebar = ({ isOpen }: AdminSidebarProps) => {
       name: "Customers",
       path: "/admin/customers",
       icon: <Users size={20} />
-    },
-    {
-      name: "Settings",
-      path: "/admin/settings",
-      icon: <Settings size={20} />
     }
   ];
 
