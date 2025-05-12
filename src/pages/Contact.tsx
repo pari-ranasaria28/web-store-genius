@@ -1,12 +1,9 @@
 
 import { useState } from "react";
 import MainLayout from "../components/layout/MainLayout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
@@ -19,157 +16,165 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
+
+    try {
+      // In a real app, this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       toast({
         title: "Message sent",
-        description: "We've received your message and will get back to you soon.",
+        description: "We've received your message. We'll get back to you soon!",
       });
+
+      // Reset form
       setFormData({
         name: "",
         email: "",
         subject: "",
         message: "",
       });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error sending your message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
     <MainLayout>
       <div className="ecommerce-container py-12">
-        <h1 className="text-3xl font-bold text-center mb-8">Contact Us</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Contact Information */}
-          <div className="md:col-span-1">
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
-                
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <Mail className="text-emerald-600 w-5 h-5 mt-1" />
-                    <div>
-                      <p className="font-medium">Email</p>
-                      <a href="mailto:support@modernshop.com" className="text-emerald-600 hover:underline">
-                        support@modernshop.com
-                      </a>
-                    </div>
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-slate-800 mb-8">Contact Us</h1>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Get In Touch</h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium text-slate-500">Email</p>
+                    <p className="text-slate-800">support@example.com</p>
                   </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <Phone className="text-emerald-600 w-5 h-5 mt-1" />
-                    <div>
-                      <p className="font-medium">Phone</p>
-                      <a href="tel:+15551234567" className="text-emerald-600 hover:underline">
-                        +1 (555) 123-4567
-                      </a>
-                    </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500">Phone</p>
+                    <p className="text-slate-800">+1 (555) 123-4567</p>
                   </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <MapPin className="text-emerald-600 w-5 h-5 mt-1" />
-                    <div>
-                      <p className="font-medium">Address</p>
-                      <address className="not-italic">
-                        123 Modern Street<br />
-                        San Francisco, CA 94103
-                      </address>
-                    </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-500">Address</p>
+                    <p className="text-slate-800">
+                      1234 Market Street<br />
+                      San Francisco, CA 94103
+                    </p>
                   </div>
                 </div>
-                
-                <div className="mt-8">
-                  <h3 className="font-medium mb-2">Business Hours</h3>
-                  <p className="text-slate-600">Monday - Friday: 9am - 5pm</p>
-                  <p className="text-slate-600">Saturday: 10am - 4pm</p>
-                  <p className="text-slate-600">Sunday: Closed</p>
+
+                <div className="mt-6 pt-6 border-t border-slate-100">
+                  <h4 className="text-sm font-semibold text-slate-800 mb-4">Business Hours</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex justify-between">
+                      <span className="text-slate-500">Monday - Friday:</span>
+                      <span className="text-slate-800">9:00 AM - 6:00 PM</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span className="text-slate-500">Saturday:</span>
+                      <span className="text-slate-800">10:00 AM - 4:00 PM</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span className="text-slate-500">Sunday:</span>
+                      <span className="text-slate-800">Closed</span>
+                    </li>
+                  </ul>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Contact Form */}
-          <div className="md:col-span-2">
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Send us a message</h2>
-                
+              </div>
+            </div>
+
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Send a Message</h3>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Your Name</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-1">
+                        Your Name
+                      </label>
                       <Input
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        placeholder="John Doe"
                         required
                       />
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
+                        Your Email
+                      </label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
+                        placeholder="john@example.com"
                         required
                       />
                     </div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject</Label>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-1">
+                      Subject
+                    </label>
                     <Input
                       id="subject"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
+                      placeholder="How can we help you?"
                       required
                     />
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-1">
+                      Message
+                    </label>
                     <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      className="min-h-[150px]"
+                      placeholder="Your message here..."
+                      rows={6}
                       required
                     />
                   </div>
-                  
+
                   <Button 
                     type="submit" 
                     className="w-full bg-emerald-600 hover:bg-emerald-700"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? (
-                      <>Sending...</>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" /> Send Message
-                      </>
-                    )}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>

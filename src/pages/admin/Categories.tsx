@@ -5,13 +5,16 @@ import { categories } from "../../data/products";
 import { Plus, Edit, Trash, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
 import AddCategoryDialog from "../../components/admin/AddCategoryDialog";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminCategories = () => {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [categoriesList, setCategoriesList] = useState<string[]>([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  const [newCategoryName, setNewCategoryName] = useState("");
   
   useEffect(() => {
     // Filter out "All" category and load the rest
@@ -28,14 +31,70 @@ const AdminCategories = () => {
   const handleDeleteCategory = (categoryToDelete: string) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       setCategoriesList(categoriesList.filter(cat => cat !== categoryToDelete));
+      toast({
+        title: "Category deleted",
+        description: `Category "${categoryToDelete}" has been deleted.`
+      });
     }
   };
 
   const handleAddCategory = (newCategory: string) => {
     if (!categoriesList.includes(newCategory)) {
       setCategoriesList([...categoriesList, newCategory]);
+      toast({
+        title: "Category added",
+        description: `Category "${newCategory}" has been added.`
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "This category already exists.",
+        variant: "destructive"
+      });
     }
     setAddDialogOpen(false);
+  };
+
+  const handleEditClick = (category: string) => {
+    setEditingCategory(category);
+    setNewCategoryName(category);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategory(null);
+    setNewCategoryName("");
+  };
+
+  const handleSaveEdit = (originalCategory: string) => {
+    if (!newCategoryName.trim()) {
+      toast({
+        title: "Error",
+        description: "Category name cannot be empty.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (categoriesList.includes(newCategoryName) && newCategoryName !== originalCategory) {
+      toast({
+        title: "Error",
+        description: "This category already exists.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCategoriesList(categoriesList.map(cat => 
+      cat === originalCategory ? newCategoryName : cat
+    ));
+    
+    toast({
+      title: "Category updated",
+      description: `Category "${originalCategory}" has been renamed to "${newCategoryName}".`
+    });
+    
+    setEditingCategory(null);
+    setNewCategoryName("");
   };
 
   return (
@@ -87,22 +146,46 @@ const AdminCategories = () => {
                 {filteredCategories.map((category) => (
                   <tr key={category} className="border-b border-slate-100 hover:bg-slate-50">
                     <td className="py-4">
-                      <p className="font-medium text-slate-800">{category}</p>
+                      {editingCategory === category ? (
+                        <Input
+                          value={newCategoryName}
+                          onChange={(e) => setNewCategoryName(e.target.value)}
+                          autoFocus
+                        />
+                      ) : (
+                        <p className="font-medium text-slate-800">{category}</p>
+                      )}
                     </td>
                     <td className="py-4">
                       <span className="text-slate-600">0</span>
                     </td>
                     <td className="py-4">
                       <div className="flex items-center justify-end space-x-2">
-                        <button className="p-2 text-slate-600 hover:bg-slate-100 rounded-md">
-                          <Edit size={18} />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteCategory(category)}
-                          className="p-2 text-slate-600 hover:bg-red-50 hover:text-red-500 rounded-md"
-                        >
-                          <Trash size={18} />
-                        </button>
+                        {editingCategory === category ? (
+                          <>
+                            <Button size="sm" onClick={() => handleSaveEdit(category)} className="bg-emerald-600 hover:bg-emerald-700">
+                              Save
+                            </Button>
+                            <Button size="sm" variant="outline" onClick={handleCancelEdit}>
+                              Cancel
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <button 
+                              className="p-2 text-slate-600 hover:bg-slate-100 rounded-md"
+                              onClick={() => handleEditClick(category)}
+                            >
+                              <Edit size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCategory(category)}
+                              className="p-2 text-slate-600 hover:bg-red-50 hover:text-red-500 rounded-md"
+                            >
+                              <Trash size={18} />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

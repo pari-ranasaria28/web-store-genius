@@ -1,10 +1,14 @@
 
+import { useStripe } from "../../contexts/StripeContext";
+
 type CartSummaryProps = {
   subtotal: number;
   onCheckout: () => void;
 };
 
 const CartSummary = ({ subtotal, onCheckout }: CartSummaryProps) => {
+  const { processPayment } = useStripe();
+  
   // Calculate taxes (e.g., 8% of subtotal)
   const tax = subtotal * 0.08;
   
@@ -13,6 +17,11 @@ const CartSummary = ({ subtotal, onCheckout }: CartSummaryProps) => {
   
   // Total cost
   const total = subtotal + tax + shipping;
+
+  const handleCheckout = async () => {
+    await processPayment(total, "Shopping cart items");
+    onCheckout();
+  };
   
   return (
     <div className="bg-slate-50 rounded-lg p-6 sticky top-20">
@@ -45,7 +54,7 @@ const CartSummary = ({ subtotal, onCheckout }: CartSummaryProps) => {
       </div>
       
       <button
-        onClick={onCheckout}
+        onClick={handleCheckout}
         className="w-full btn-primary mt-6 py-3 flex items-center justify-center"
       >
         Proceed to Checkout

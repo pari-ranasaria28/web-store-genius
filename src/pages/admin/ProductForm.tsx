@@ -4,10 +4,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import AdminLayout from "../../components/layout/AdminLayout";
 import ProductFormComponent from "../../components/admin/ProductForm";
 import { getProductById, Product } from "../../data/products";
+import { addProduct, updateProduct } from "../../utils/productUtils";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminProductForm = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -27,16 +30,34 @@ const AdminProductForm = () => {
     }
   }, [id, isNewProduct]);
   
-  const handleSubmit = (data: Omit<Product, "id">) => {
+  const handleSubmit = (data: Omit<Product, "id"> | Product) => {
     setIsLoading(true);
     
     try {
-      // In a real app, this would be an API call
-      console.log("Submitting product data:", data);
-      // Redirect back to products list after saving
+      if (isNewProduct) {
+        // Add new product
+        const newProductData = data as Omit<Product, "id">;
+        addProduct(newProductData);
+      } else {
+        // Update existing product
+        updateProduct(data as Product);
+      }
+      
+      // Show success message
+      toast({
+        title: isNewProduct ? "Product created" : "Product updated",
+        description: `Successfully ${isNewProduct ? "created" : "updated"} the product.`
+      });
+      
+      // Redirect back to products list
       navigate("/admin/products");
     } catch (err) {
       setError("Failed to save product");
+      toast({
+        title: "Error",
+        description: "Failed to save product",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
