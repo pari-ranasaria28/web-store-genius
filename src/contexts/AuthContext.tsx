@@ -23,12 +23,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { isLoaded, userId, signOut } = useClerkAuth();
   const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
   
-  // For demo purposes, we'll consider any authenticated user as admin
+  // Check if the user signed up via the admin route or has admin metadata
+  const userMetadata = clerkUser?.publicMetadata;
+  const isAdmin = userMetadata?.role === "admin";
+  
   const user: User | null = userId && clerkUser ? {
     id: userId,
     email: clerkUser.primaryEmailAddress?.emailAddress || "",
     name: `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim(),
-    isAdmin: true  // In a real app, you would determine this based on user roles
+    isAdmin: Boolean(isAdmin)  // Convert to boolean to ensure proper typing
   } : null;
   
   const login = async (email: string, password: string) => {

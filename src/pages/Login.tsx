@@ -10,9 +10,9 @@ const UserLogin = () => {
   const { user } = useAuth();
   const [loginType, setLoginType] = useState<"admin" | "user">("user");
   
-  // If already logged in, redirect to home page
+  // If already logged in, redirect to appropriate page based on user role
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={user.isAdmin ? "/admin" : "/"} replace />;
   }
   
   return (
@@ -51,9 +51,9 @@ const UserLogin = () => {
             </div>
             
             <SignIn 
-              signUpUrl={loginType === "admin" ? "/admin/sign-up" : "/sign-up"}
+              signUpUrl="/sign-up"
               afterSignInUrl={loginType === "admin" ? "/admin" : "/"}
-              fallbackRedirectUrl={loginType === "admin" ? "/admin" : "/"}
+              redirectUrl={loginType === "admin" ? "/admin" : "/"}
               appearance={{
                 elements: {
                   formButtonPrimary: "bg-emerald-600 hover:bg-emerald-700"
