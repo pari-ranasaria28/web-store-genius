@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
   
   // Check if the user signed up via the admin route or has admin metadata
-  const userMetadata = clerkUser?.publicMetadata;
+  const userMetadata = clerkUser?.unsafeMetadata;
   const isAdmin = userMetadata?.role === "admin";
   
   const user: User | null = userId && clerkUser ? {
