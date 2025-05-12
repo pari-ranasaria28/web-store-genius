@@ -1,20 +1,18 @@
 
 import { createContext, useContext, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
 
 interface StripeContextType {
-  processPayment: (amount: number, productName: string) => Promise<void>;
+  processPayment: (amount: number, productName: string, onSuccess?: () => void) => Promise<void>;
 }
 
 const StripeContext = createContext<StripeContextType | undefined>(undefined);
 
 export const StripeProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   // Handle payment processing
-  const processPayment = async (amount: number, productName: string) => {
+  const processPayment = async (amount: number, productName: string, onSuccess?: () => void) => {
     try {
       toast({
         title: "Processing payment",
@@ -30,7 +28,10 @@ export const StripeProvider = ({ children }: { children: ReactNode }) => {
           title: "Payment successful",
           description: "Your order has been placed successfully.",
         });
-        navigate('/thank-you');
+        // Use the callback for navigation instead of direct useNavigate
+        if (onSuccess) {
+          onSuccess();
+        }
       }, 2000);
       
     } catch (error) {

@@ -1,5 +1,6 @@
 
 import { useStripe } from "../../contexts/StripeContext";
+import { useNavigate } from "react-router-dom";
 
 type CartSummaryProps = {
   subtotal: number;
@@ -8,6 +9,7 @@ type CartSummaryProps = {
 
 const CartSummary = ({ subtotal, onCheckout }: CartSummaryProps) => {
   const { processPayment } = useStripe();
+  const navigate = useNavigate();
   
   // Calculate taxes (e.g., 8% of subtotal)
   const tax = subtotal * 0.08;
@@ -19,8 +21,10 @@ const CartSummary = ({ subtotal, onCheckout }: CartSummaryProps) => {
   const total = subtotal + tax + shipping;
 
   const handleCheckout = async () => {
-    await processPayment(total, "Shopping cart items");
-    onCheckout();
+    await processPayment(total, "Shopping cart items", () => {
+      navigate('/thank-you');
+      onCheckout();
+    });
   };
   
   return (
