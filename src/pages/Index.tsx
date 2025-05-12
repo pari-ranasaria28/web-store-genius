@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import ProductGrid from "../components/product/ProductGrid";
 import { getFeaturedProducts, categories } from "../data/products";
@@ -8,11 +8,16 @@ import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Fetch featured products - in a real app, this would be an API call
     setFeaturedProducts(getFeaturedProducts());
   }, []);
+  
+  const handleCategoryClick = (category: string) => {
+    navigate(`/products?category=${category}`);
+  };
   
   return (
     <MainLayout>
@@ -73,13 +78,13 @@ const Index = () => {
             {categories
               .filter(category => category !== "All")
               .map((category) => (
-                <Link
+                <div
                   key={category}
-                  to={`/categories/${category}`}
-                  className="bg-white shadow-sm hover:shadow-md rounded-lg p-6 text-center transition-shadow"
+                  onClick={() => handleCategoryClick(category)}
+                  className="bg-white shadow-sm hover:shadow-md rounded-lg p-6 text-center transition-shadow cursor-pointer"
                 >
                   <h3 className="text-slate-800 font-medium">{category}</h3>
-                </Link>
+                </div>
               ))}
           </div>
         </div>

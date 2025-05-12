@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "../../components/layout/AdminLayout";
 import { categories } from "../../data/products";
+import { addCategory } from "../../utils/productUtils";
 import { Plus, Edit, Trash, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,11 @@ const AdminCategories = () => {
   const handleDeleteCategory = (categoryToDelete: string) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       setCategoriesList(categoriesList.filter(cat => cat !== categoryToDelete));
+      // In a real app, we would also update the categories array in the backend
+      const updatedCategories = categories.filter(cat => cat !== categoryToDelete);
+      categories.length = 0;
+      categories.push(...updatedCategories);
+      
       toast({
         title: "Category deleted",
         description: `Category "${categoryToDelete}" has been deleted.`
@@ -39,7 +45,9 @@ const AdminCategories = () => {
   };
 
   const handleAddCategory = (newCategory: string) => {
-    if (!categoriesList.includes(newCategory)) {
+    const success = addCategory(newCategory);
+    
+    if (success) {
       setCategoriesList([...categoriesList, newCategory]);
       toast({
         title: "Category added",
@@ -84,9 +92,16 @@ const AdminCategories = () => {
       return;
     }
 
+    // Update local state
     setCategoriesList(categoriesList.map(cat => 
       cat === originalCategory ? newCategoryName : cat
     ));
+    
+    // Update the main categories array
+    const categoryIndex = categories.findIndex(cat => cat === originalCategory);
+    if (categoryIndex !== -1) {
+      categories[categoryIndex] = newCategoryName;
+    }
     
     toast({
       title: "Category updated",
@@ -138,7 +153,6 @@ const AdminCategories = () => {
               <thead>
                 <tr className="text-left border-b border-slate-200">
                   <th className="pb-3 font-medium text-slate-600">Category Name</th>
-                  <th className="pb-3 font-medium text-slate-600">Products</th>
                   <th className="pb-3 font-medium text-slate-600 text-right">Actions</th>
                 </tr>
               </thead>
@@ -155,9 +169,6 @@ const AdminCategories = () => {
                       ) : (
                         <p className="font-medium text-slate-800">{category}</p>
                       )}
-                    </td>
-                    <td className="py-4">
-                      <span className="text-slate-600">0</span>
                     </td>
                     <td className="py-4">
                       <div className="flex items-center justify-end space-x-2">

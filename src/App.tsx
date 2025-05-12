@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +21,10 @@ import Categories from "./pages/Categories";
 import About from "./pages/About";
 import Account from "./pages/Account";
 import Contact from "./pages/Contact";
+import Shipping from "./pages/Shipping";
+import Returns from "./pages/Returns";
+import Faq from "./pages/Faq";
+import Privacy from "./pages/Privacy";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
@@ -39,11 +44,11 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <CartProvider>
-        <StripeProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+        <BrowserRouter>
+          <StripeProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
               <Routes>
                 {/* Customer Routes */}
                 <Route path="/" element={<Index />} />
@@ -58,6 +63,10 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/account" element={<Account />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/shipping" element={<Shipping />} />
+                <Route path="/returns" element={<Returns />} />
+                <Route path="/faq" element={<Faq />} />
+                <Route path="/privacy" element={<Privacy />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<AdminLogin />} />
@@ -74,9 +83,9 @@ const App = () => (
                 {/* Catch-all Route */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </StripeProvider>
+            </TooltipProvider>
+          </StripeProvider>
+        </BrowserRouter>
       </CartProvider>
     </AuthProvider>
   </QueryClientProvider>

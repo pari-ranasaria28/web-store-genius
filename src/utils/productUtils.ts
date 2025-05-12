@@ -1,5 +1,5 @@
 
-import { Product, products } from "../data/products";
+import { Product, products, categories } from "../data/products";
 
 // This is a mock implementation - in a real app, this would call your API
 export const addProduct = (product: Omit<Product, "id">): Product => {
@@ -25,4 +25,30 @@ export const updateProduct = (product: Product): Product => {
   }
   
   return product;
+};
+
+export const addCategory = (category: string): boolean => {
+  // Check if category already exists (case-insensitive)
+  if (categories.some(c => c.toLowerCase() === category.toLowerCase())) {
+    return false;
+  }
+  
+  // In a real app, this would be an API call
+  categories.push(category);
+  return true;
+};
+
+export const deleteProduct = (id: string): boolean => {
+  const initialLength = products.length;
+  const filteredProducts = products.filter(product => product.id !== id);
+  
+  if (filteredProducts.length === initialLength) {
+    return false; // Product not found
+  }
+  
+  // Update the original array
+  products.length = 0;
+  products.push(...filteredProducts);
+  
+  return true;
 };

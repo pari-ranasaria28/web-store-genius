@@ -52,7 +52,12 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/shipping" className="text-slate-300 hover:text-emerald-400 transition">
-                  Shipping & Returns
+                  Shipping & Delivery
+                </Link>
+              </li>
+              <li>
+                <Link to="/returns" className="text-slate-300 hover:text-emerald-400 transition">
+                  Returns & Refunds
                 </Link>
               </li>
               <li>
